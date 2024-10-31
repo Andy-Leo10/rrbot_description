@@ -1,0 +1,57 @@
+# This Docker image will contain everything necessary 
+# for starting the Ignition simulation in ROS2
+
+# Start from ROS Humble desktop image
+FROM osrf/ros:humble-desktop
+
+# Use ARG to set DEBIAN_FRONTEND to noninteractive only during the build
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages including apt-utils
+RUN apt-get update && apt-get install -y \
+    apt-utils \
+    git \
+    build-essential \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    python3-rosinstall-generator \
+    python3-vcstool \
+    wget \
+    ros-humble-ign-ros2-control \
+    ros-humble-ros-ign-gazebo \
+    ros-humble-controller-manager \
+    ros-humble-ros2-control \
+    ros-humble-ros2-controllers \
+    ros-humble-control-toolbox \
+    ros-humble-joint-state-publisher \
+    # Add other necessary packages here
+    && rm -rf /var/lib/apt/lists/*
+
+# It's generally a good idea to run rosdep update as a non-root user,
+# but in Docker, we typically ignore this warning.
+RUN rosdep update
+
+# Create an overlay Colcon workspace
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash \
+    && mkdir -p /ros2_ws/src \
+    && cd /ros2_ws \
+    && colcon build --symlink-install"
+COPY . /ros2_ws/src/rrbot_description
+
+# Attempt to install dependencies, skipping the problematic package
+RUN apt-get update && apt-get upgrade -y && \
+    cd /ros2_ws && \
+    rosdep install --from-paths src --ignore-src -r -y --skip-keys="ros-humble-warehouse-ros-mongo" || true
+
+# Build the workspace
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash \
+    && cd /ros2_ws \
+    && colcon build --symlink-install \
+    && source /ros2_ws/install/setup.bash \
+    && echo 'source /ros2_ws/install/setup.bash' >> ~/.bashrc"
+
+# Set up the work directory
+WORKDIR /ros2_ws
+# Set up the entrypoint
+# CMD /bin/bash -c "source /ros2_ws/install/setup.bash \
+#     && ros2 launch the_construct_office_gazebo starbots_ur3e.launch.xml

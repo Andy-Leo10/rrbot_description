@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<launch>
+
+  <!-- Launches the World independently-->
+  <include file="$(find-pkg-share rrbot_description)/launch/2_set_world.launch.py"/>
+  <!-- Launches the Robot independently -->
+  <include file="$(find-pkg-share rrbot_description)/launch/3_spawn_and_bridge.launch.py"/>
+
+</launch>

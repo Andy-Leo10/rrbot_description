@@ -1,0 +1,2 @@
+The layout of the maze has been generated with the use of https://github.com/codebox/mazes.
+The solution for the package_files function in setup.py is by joseecm (https://answers.ros.org/users/44853/joseecm/) available at https://answers.ros.org/question/397319/how-to-copy-folders-with-subfolders-to-package-installation-path/?answer=397410#post-id-397410

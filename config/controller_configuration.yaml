@@ -1,0 +1,23 @@
+# Controller manager configuration
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    ### Controllers available
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+### Properties of the controllers that we will use and definition of joints to use ###
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity

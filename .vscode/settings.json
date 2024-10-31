@@ -1,0 +1,5 @@
+{
+    "urdf-visualizer.packages": {
+        "rrbot_description": "${workspaceFolder}",
+    }
+}

@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+    rrbot_server:
+        hostname: rrbot
+        build:
+            context: .
+            dockerfile: rrbot-ignition
+        container_name: rrbot_container
+        environment:
+            - DISPLAY
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            # - ./ur_arm:/ros2_ws/src/ur_arm
+        networks:
+            - ros2-net
+        command: tail -f /dev/null
+        # command: "/bin/bash -c \"sleep 2 && source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && ros2 launch rrbot_description 5_everything.launch.py\""
+
+networks:
+    ros2-net:    
