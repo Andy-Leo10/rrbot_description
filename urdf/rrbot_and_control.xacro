@@ -62,6 +62,7 @@
     <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
   </joint>
 
   <!-- Middle Link -->
@@ -94,6 +95,7 @@
     <origin xyz="0 ${width} ${height2 - axel_offset*2}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
   </joint>
 
   <!-- Top Link -->
@@ -163,8 +165,38 @@
 
   <link name="camera_link_optical"></link>
 
+  <joint name="joint3" type="continuous">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 ${width} ${height3 - axel_offset*2}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
+    <mimic joint="joint1" multiplier="-1.0" offset="0.0"/>
+  </joint>
 
+  <link name="link4">
+    <collision>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${width} ${width} ${height2}"/>
+      </geometry>
+    </collision>
 
+    <visual>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${width} ${width} ${height2}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass / 12.0 * (width*width + height2*height2)}" ixy="0.0" ixz="0.0" iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0" izz="${mass / 12.0 * (width*width + width*width)}"/>
+    </inertial>
+  </link>
 
 
 
@@ -178,42 +210,54 @@
       <!-- <plugin>ros_gz_sim/GazeboSystem</plugin> -->
     </hardware>
     
-    <joint name="joint1">
-      <command_interface name="position">
-        <param name="min">-6.28</param>
-        <param name="max">6.28</param>
-      </command_interface>
-      <state_interface name="position"/>
-        <param name="initial_value">-5.0</param>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-    
-    <joint name="joint2">
-      <command_interface name="position">
-        <param name="min">-6.28</param>
-        <param name="max">6.28</param>
-      </command_interface>
-      <state_interface name="position"/>
-        <param name="initial_value">-5.0</param>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-
+      <joint name="joint1">
+        <command_interface name="position">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <command_interface name="acceleration">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="acceleration"/>
+      </joint>
+      <joint name="joint2">
+        <command_interface name="position">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <command_interface name="acceleration">
+          <param name="min">-1</param>
+          <param name="max">1</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="acceleration"/>
+      </joint>
+      <joint name="joint3">
+        <param name="mimic">joint1</param>
+        <param name="multiplier">-1</param>
+        <param name="offset">0</param>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="acceleration"/>
+      </joint>
   </ros2_control>
 
   <!-- Gazebo's ros2_control plugin -->
   <gazebo>
     <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-    <!-- <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin"> -->
-    <!-- <plugin filename="gz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin"> -->
-    <!-- <plugin filename="libros_gz_sim_control.so" name="ros_gz_sim_control::GazeboSystemInterface"> -->
-      <!-- <robot_sim_type>ign_ros2_control/IgnitionSystem</robot_sim_type> -->
-      <!-- <robot_sim_type>gz_ros2_control/GazeboSystem</robot_sim_type> -->
-      <!-- <robot_param>robot_description</robot_param> -->
-      <!-- <robot_param_node>robot_state_publisher</robot_param_node> -->
       <parameters>$(find rrbot_description)/config/controller_configuration.yaml</parameters>
-      <!-- <controller_manager_node_name>controller_manager</controller_manager_node_name> -->
     </plugin>
   </gazebo>
 

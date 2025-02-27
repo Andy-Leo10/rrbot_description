@@ -99,23 +99,21 @@ def generate_launch_description():
             "-z", LaunchConfiguration("z"),
         ],
         output="screen",
-    ) 
-    
-    load_joint_state_broadcaster = Node(
+    )      
+
+    joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_state_broadcaster",
                    "--controller-manager", "/controller_manager"],
-        output="screen",
-    )    
+    )
 
-    load_joint_trajectory_controller = Node(
+    robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_trajectory_controller", "-c", "/controller_manager"],
-        output="screen",
-    )       
-
+        arguments=["position_trajectory_controller", "-c", "/controller_manager"],
+    )
+    
     # ROS-Gazebo Bridge #
     node_ign_bridge = Node(
         package="ros_gz_bridge",
@@ -153,13 +151,13 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=node_ignition_spawn_entity,
-                on_exit=[load_joint_state_broadcaster],
+                on_exit=[joint_state_broadcaster_spawner],
             )
         ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
-                target_action=load_joint_state_broadcaster,
-                on_exit=[load_joint_trajectory_controller],
+                target_action=joint_state_broadcaster_spawner,
+                on_exit=[robot_controller_spawner],
             )
         ),
         

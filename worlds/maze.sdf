@@ -7,9 +7,9 @@
     </physics>
    
     <plugin filename="libignition-gazebo-physics-system.so" name="ignition::gazebo::systems::Physics"/>
-    <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+    <!-- <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
       <render_engine>ogre2</render_engine>
-    </plugin>
+    </plugin> -->
     <plugin filename="libignition-gazebo-user-commands-system.so" name="ignition::gazebo::systems::UserCommands"/>
     <plugin filename="libignition-gazebo-scene-broadcaster-system.so" name="ignition::gazebo::systems::SceneBroadcaster"/>
 
@@ -78,12 +78,12 @@
         <iterations>true</iterations>
       </plugin>
       
-      <plugin filename="Teleop" name="Teleop">
+      <!-- <plugin filename="Teleop" name="Teleop">
         <ignition-gui>
           <property type="string" key="state">docked</property>
         </ignition-gui>
         <topic>/sam_bot/cmd_vel</topic>
-      </plugin>
+      </plugin> -->
       
     </gui>
     <light type="directional" name="sun">

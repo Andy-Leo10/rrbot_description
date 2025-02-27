@@ -1,0 +1,25 @@
+ros2 topic pub /position_trajectory_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "{
+  header: {
+    stamp: {sec: 0, nanosec: 0},
+    frame_id: ''
+  },
+  joint_names: ['joint1', 'joint2'],
+  points: [
+    {
+      positions: [0.785, 0.785],
+      time_from_start: {sec: 1, nanosec: 0}
+    },
+    {
+      positions: [0, 0],
+      time_from_start: {sec: 2, nanosec: 0}
+    },
+    {
+      positions: [-0.785, -0.785],
+      time_from_start: {sec: 3, nanosec: 0}
+    },
+    {
+      positions: [0, 0],
+      time_from_start: {sec: 4, nanosec: 0}
+    }
+  ]
+}" -1
